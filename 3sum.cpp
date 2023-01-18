@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -8,6 +9,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
   vector<vector<int>> result;
   unordered_map<int, vector<pair<int, int>>> umap;
   unordered_map<int, vector<pair<int, int>>>::iterator umapit;
+  bool flag;
 
   int sum;
 
@@ -34,14 +36,14 @@ vector<vector<int>> threeSum(vector<int>& nums) {
   // umap -1: {0,1}{1,4}
 
   // print umap
-  for (auto x : umap) {
-    cout << "umap " << x.first << ": ";
-    for (auto y : x.second)
-      cout << "{" << y.first << "," << y.second << "}";
-    cout << "\n";
-  }
+  // for (auto x : umap) {
+  //   cout << "umap " << x.first << ": ";
+  //   for (auto y : x.second)
+  //     cout << "{" << y.first << "," << y.second << "}";
+  //   cout << "\n";
+  // }
 
-  return result;
+  // return result;
 
   // For each element find the complementing pair
   int element;
@@ -50,22 +52,37 @@ vector<vector<int>> threeSum(vector<int>& nums) {
     element = nums[i];
     complement = (-1) * element;
 
-    cout << element << ": ";
+    // cout << "nums[" << i << "]=" << element << ": ";
 
     umapit = umap.find(complement);
 
     if (umapit == umap.end()) {
-      cout << "not found";
+      // cout << "not found";
     }
     else {
       // There are pairs of numbers that complement the current element
       // Iterating through the vector umapit->second
       for (auto x : umapit->second) {
         // x is a pair containing the indexes of nums
-        // TODO
+        if (!((i == x.first) || (i == x.second))) {
+          // cout << "{indexes:" << x.first << "," << x.second << "} ";
+
+          vector<int> triplet = {nums[i], nums[x.first], nums[x.second]};
+          sort(triplet.begin(), triplet.end());
+
+          // check if triplet exists in the results vector before inserting it
+          flag = false;
+          for (auto v : result) {
+            if (v == triplet)
+              flag = true;
+          }
+
+          if (flag == false)
+            result.push_back(triplet);
+        }
       }
     }
-    cout << "\n";
+    // cout << "\n";
 
 
   }
